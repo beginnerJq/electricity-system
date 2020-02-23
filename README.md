@@ -1,4 +1,4 @@
-### React H5
+### React
 
 ---
 
@@ -58,7 +58,8 @@ valid-typeof // typeof 的返回值只能与有效的类型的字符比较
 
 ```
 
-vacode配置
+vacode 配置
+
 ```
 {
   "eslint.enable": true,  //是否开启vscode的eslint
