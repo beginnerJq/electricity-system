@@ -13,22 +13,24 @@ const { TabPane } = Tabs;
 const Login = props => {
   const { state, action } = props;
   return (
-    <div styleName='styles.login-wrap' id='login-wrap'>
-      <Tabs>
-        <TabPane key='userlogin' tab='用户名登录'>
-          <UserComponent
-            loading={state.userLoading}
-            userLogin={action.userLogin}
-          />
-        </TabPane>
-        <TabPane key='mobilelogin' tab='手机号登录'>
-          <MobileComponent
-            loading={state.captchaLoading}
-            getCaptcha={action.getCaptcha}
-            captchaLogin={action.captchaLogin}
-          />
-        </TabPane>
-      </Tabs>
+    <div styleName='styles.login-container'>
+      <div styleName='styles.login-wrap' id='login-wrap'>
+        <Tabs>
+          <TabPane key='userlogin' tab='用户名登录'>
+            <UserComponent
+              loading={state.userLoading}
+              userLogin={action.userLogin}
+            />
+          </TabPane>
+          <TabPane key='mobilelogin' tab='手机号登录'>
+            <MobileComponent
+              loading={state.captchaLoading}
+              getCaptcha={action.getCaptcha}
+              captchaLogin={action.captchaLogin}
+            />
+          </TabPane>
+        </Tabs>
+      </div>
     </div>
   );
 };

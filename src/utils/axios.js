@@ -35,9 +35,8 @@ axios.interceptors.response.use(
       setUserInfo(); // 删除用户信息
       history.push('/login'); // 跳转登录页
       return Promise.reject(500001);
-    } else {
-      return data;
     }
+    return data;
   },
   function(error) {
     message.error('网络错误!');
