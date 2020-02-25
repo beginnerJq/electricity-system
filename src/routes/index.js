@@ -8,6 +8,7 @@ import { EquipRoute, EquipDetailsRoute } from '../pages/equip';
 import { AddEquipRoute } from '../pages/addEquip';
 import { AddUserRoute } from '../pages/addUser';
 import { UserListRoute } from '../pages/userList';
+import { LineManageRoute } from '../pages/lineManage';
 
 const allRoutesConfig = [].concat(
   HomeRoute,
@@ -17,6 +18,7 @@ const allRoutesConfig = [].concat(
   AddEquipRoute,
   AddUserRoute,
   UserListRoute,
+  LineManageRoute,
 );
 
 const Routes = () => {

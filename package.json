@@ -1,7 +1,7 @@
 {
-  "name": "mining-h5",
+  "name": "electricity",
   "version": "1.0.0",
-  "description": "mining-h5",
+  "description": "electricity",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --hot",
@@ -10,7 +10,7 @@
     "i18n": "babel src"
   },
   "keywords": [
-    "mining"
+    "electricity"
   ],
   "author": "jq",
   "license": "ISC",
