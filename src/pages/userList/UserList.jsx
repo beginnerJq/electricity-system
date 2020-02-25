@@ -110,6 +110,14 @@ const UserList = props => {
         columns={columns}
         rowKey='userId'
         loading={isLoading}
+        pagination={{
+          current: userList.pageNum,
+          total: userList.count,
+        }}
+        onChange={pagination => {
+          const { current: pageNum } = pagination;
+          getUserList({ pageNum, ...fields });
+        }}
       />
       {/* 修改用户弹窗 */}
       <ModifyUser

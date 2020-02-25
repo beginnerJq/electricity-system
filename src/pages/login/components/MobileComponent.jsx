@@ -15,6 +15,7 @@ const MobileComponent = Form.create()(props => {
       setCountDown('获取验证码');
       setCaptchaStatus(false);
     }
+    return () => clearTimeout(s);
   }, [countDown]);
   // 获取验证码
   const getCaptchaClick = () => {

@@ -1,11 +1,29 @@
 import React from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Avatar, Dropdown } from 'antd';
 import { Link } from 'react-router-dom';
 import { history } from 'utils/history';
+import { getUserInfo, setUserInfo } from 'utils/userInfo';
+import { isLogin } from 'utils/globalName';
 import Routes, { allRoutesConfig } from '../routes';
 import './Layout.pcss';
 
 const { Header, Sider, Content } = Layout;
+
+const menu = (
+  <Menu
+    onClick={({ key }) => {
+      if (key == 1) {
+        localStorage.removeItem(isLogin);
+        setUserInfo(); // 删除用户信息
+        history.push('/login'); // 跳转登录页
+      }
+    }}
+  >
+    <Menu.Item key={1}>
+      <span>退出</span>
+    </Menu.Item>
+  </Menu>
+);
 
 const LayoutComponent = props => {
   return (
@@ -34,7 +52,22 @@ const LayoutComponent = props => {
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: 0 }}></Header>
+        <Header style={{ background: '#fff' }}>
+          <Dropdown overlay={menu}>
+            <div styleName='avatar-wrap'>
+              <span>
+                <Avatar
+                  style={{ backgroundColor: '#87d068' }}
+                  icon='user'
+                  size='large'
+                />
+              </span>
+              <span>
+                你好，{getUserInfo('userName')} <Icon type='down' />
+              </span>
+            </div>
+          </Dropdown>
+        </Header>
         <Content
           style={{
             margin: '24px 16px',
