@@ -16,7 +16,7 @@ const userBindUpdate = params => {
   return axios.post('/user/bind/update', params);
 };
 const userDelete = params => {
-  return axios.post('/user/bind/delete', params);
+  return axios.post('/user/delete', params);
 };
 
 export { userList, userInfo, userEdit, userBind, userBindUpdate, userDelete };
