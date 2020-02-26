@@ -12,6 +12,7 @@ import {
 import { AddEquipState, AddEquipSaga } from '../pages/addEquip';
 import { AddUserState, AddUserSaga } from '../pages/addUser';
 import { UserListState, UserListSaga } from '../pages/userList';
+import { LineManageState, LineManageSaga } from '../pages/lineManage';
 
 const rootReducer = combineReducers({
   LoginState,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   AddEquipState,
   AddUserState,
   UserListState,
+  LineManageState,
 });
 
 function* rootSaga() {
@@ -34,6 +36,7 @@ function* rootSaga() {
     fork(AddEquipSaga),
     fork(AddUserSaga),
     fork(UserListSaga),
+    fork(LineManageSaga),
   ]);
 }
 

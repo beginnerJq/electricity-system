@@ -1,4 +1,7 @@
 import { lazy } from 'react';
+import * as LineManageAction from './models/actions';
+import LineManageState from './models/reducers';
+import LineManageSaga from './models/saga';
 
 const LineManageRoute = [
   {
@@ -11,4 +14,4 @@ const LineManageRoute = [
   },
 ];
 
-export { LineManageRoute };
+export { LineManageRoute, LineManageAction, LineManageState, LineManageSaga };
