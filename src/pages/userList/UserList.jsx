@@ -60,6 +60,7 @@ const UserList = props => {
             <Tooltip title='编辑'>
               <span
                 onClick={() => {
+                  outerUserId = userId;
                   getUserInfo({ userId }); // 获取用户信息
                   setVisible(state => ({ ...state, modify: true }));
                 }}
@@ -73,6 +74,7 @@ const UserList = props => {
                   if (type < 2) {
                     return;
                   }
+                  outerUserId = userId;
                   getUserBind({ userId }); // 获取设备
                   setVisible(state => ({ ...state, bind: true }));
                 }}
@@ -122,7 +124,9 @@ const UserList = props => {
       {/* 修改用户弹窗 */}
       <ModifyUser
         isLoading={isLoading}
+        outerUserId={outerUserId}
         userInfo={userInfo}
+        getUserList={getUserList}
         getUserEdit={getUserEdit}
         setUserInfo={setUserInfo}
         visible={visible.modify}
@@ -131,6 +135,7 @@ const UserList = props => {
       {/* 用户绑定设备 */}
       <BindEquip
         isLoading={isLoading}
+        outerUserId={outerUserId}
         userBind={userBind}
         getUserBindUpdate={getUserBindUpdate}
         visible={visible.bind}
@@ -140,6 +145,7 @@ const UserList = props => {
       <DeleteUser
         isLoading={isLoading}
         outerUserId={outerUserId}
+        getUserList={getUserList}
         getUserDelete={getUserDelete}
         visible={visible.delete}
         setVisible={setVisible}

@@ -2,7 +2,14 @@ import React from 'react';
 import { Modal, Icon } from 'antd';
 
 const DeleteUser = props => {
-  const { isLoading, outerUserId, visible, setVisible, getUserDelete } = props;
+  const {
+    isLoading,
+    outerUserId,
+    visible,
+    setVisible,
+    getUserList,
+    getUserDelete,
+  } = props;
   return (
     <Modal
       title='删除用户'
@@ -15,7 +22,11 @@ const DeleteUser = props => {
         new Promise((resolve, reject) => {
           getUserDelete({ userId: outerUserId }, resolve, reject);
         })
-          .then(() => message.success('删除成功'))
+          .then(() => {
+            message.success('删除成功');
+            setVisible(state => ({ ...state, delete: false }));
+            getUserList({ pageNum: 1 });
+          })
           .catch(e => {
             console.log(e);
           });

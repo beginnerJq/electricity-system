@@ -3,7 +3,14 @@ import { Modal, Transfer, message } from 'antd';
 import { cloneDeep } from 'lodash-es';
 
 const BindEquip = props => {
-  const { isLoading, userBind, getUserBindUpdate, visible, setVisible } = props;
+  const {
+    isLoading,
+    outerUserId,
+    userBind,
+    getUserBindUpdate,
+    visible,
+    setVisible,
+  } = props;
   const [dataSource, setDataSource] = useState([]);
   const [targetKeys, setTargetKeys] = useState([]);
   useEffect(() => {
@@ -42,9 +49,16 @@ const BindEquip = props => {
       }}
       onOk={() => {
         new Promise((resolve, reject) => {
-          getUserBindUpdate({ cmdIdList: targetKeys }, resolve, reject);
+          getUserBindUpdate(
+            { userId: outerUserId, cmdIdList: targetKeys },
+            resolve,
+            reject,
+          );
         })
-          .then(() => message.success('绑定成功'))
+          .then(() => {
+            message.success('绑定成功');
+            setVisible(state => ({ ...state, bind: false }));
+          })
           .catch(() => {});
       }}
       width={750}

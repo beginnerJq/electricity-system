@@ -14,7 +14,9 @@ const formItemLayout = {
 const ModifyUser = props => {
   const {
     isLoading,
+    outerUserId,
     userInfo,
+    getUserList,
     getUserEdit,
     setUserInfo,
     visible,
@@ -27,10 +29,12 @@ const ModifyUser = props => {
     validateFields((err, values) => {
       if (!err) {
         new Promise((resolve, reject) => {
-          getUserEdit(values, resolve, reject);
+          getUserEdit({ userId: outerUserId, ...values }, resolve, reject);
         })
           .then(() => {
             message.success('修改成功');
+            setVisible(state => ({ ...state, modify: false }));
+            getUserList({ pageNum: 1 });
           })
           .catch(() => {});
       }
