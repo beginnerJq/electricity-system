@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Result, Button } from 'antd';
 import { history } from 'utils/history';
+import { getUserInfo } from 'utils/userInfo';
 import { HomeRoute } from '../pages/home';
 import { WarningRoute } from '../pages/warning';
 import { EquipRoute, EquipDetailsRoute } from '../pages/equip';
@@ -18,7 +19,7 @@ const allRoutesConfig = [].concat(
   AddEquipRoute,
   AddUserRoute,
   UserListRoute,
-  LineManageRoute,
+  //LineManageRoute,
 );
 
 const Routes = () => {
@@ -26,11 +27,30 @@ const Routes = () => {
     <Suspense fallback={<div>加载中...</div>}>
       <Switch>
         {allRoutesConfig.map(v => {
+          const isAuthrized = v.authorized.includes(getUserInfo('type'));
           return (
             <Route
               key={v.path}
               path={v.path}
-              component={v.component}
+              component={
+                isAuthrized
+                  ? v.component
+                  : () => (
+                      <Result
+                        status='403'
+                        title='403'
+                        subTitle='对不起, 您无权访问此页面'
+                        extra={
+                          <Button
+                            type='primary'
+                            onClick={() => history.push('/')}
+                          >
+                            返回首页
+                          </Button>
+                        }
+                      />
+                    )
+              }
               exact={v.exact}
             />
           );

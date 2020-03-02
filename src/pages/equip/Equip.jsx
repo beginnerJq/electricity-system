@@ -51,9 +51,8 @@ const columns = [
             <span
               onClick={() => {
                 confirm({
-                  title: 'Do you want to delete these items?',
-                  content:
-                    'When clicked the OK button, this dialog will be closed after 1 second',
+                  title: '删除设备',
+                  content: '你确定要删除这个设备？',
                   onOk() {
                     return new Promise((resolve, reject) => {
                       setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);

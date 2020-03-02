@@ -39,7 +39,8 @@ const LayoutComponent = props => {
           }}
         >
           {allRoutesConfig.map(v => {
-            if (v.noMenu) {
+            const isAuthrized = v.authorized.includes(getUserInfo('type'));
+            if (v.noMenu || !isAuthrized) {
               return;
             }
             return (

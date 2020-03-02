@@ -9,7 +9,7 @@ const LineManageRoute = [
     exact: true,
     component: lazy(() => import('./LineManage')),
     name: '线路管理',
-    authorized: [0, 1],
+    authorized: [0, 1, 2],
     icon: 'control',
   },
 ];

@@ -6,7 +6,7 @@ const srcDir = join(rootDir, 'src');
 //打包目录
 const distDir = join(rootDir, 'dist');
 
-const buildPublicPath = './';
+const buildPublicPath = '/';
 
 //代理配置
 const proxy = {
