@@ -6,5 +6,6 @@ const mapEquipment = () => {
 const equipmentList = params => {
   return axios.post('/index/equipmentList', params);
 };
-
-export { mapEquipment, equipmentList };
+const equipmentBaseInfo = params =>
+  axios.post('/equipment/map/baseInfo', params);
+export { mapEquipment, equipmentList, equipmentBaseInfo };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Icon } from 'antd';
+import { Modal, Icon, message } from 'antd';
 
 const DeleteUser = props => {
   const {

@@ -2,3 +2,21 @@
   height: 100%;
   position: relative;
 }
+#equipmentBaseInfo {
+  width: 250px;
+  max-height: 250px;
+  padding: 15px;
+}
+#equipmentBaseInfo > p {
+  display: flex;
+}
+#equipmentBaseInfo b {
+  flex-basis: 30%;
+  text-align: right;
+}
+#equipmentBaseInfo span {
+  flex-basis: 70%;
+  padding-left: 5px;
+  text-align: left;
+  word-break: break-all;
+}

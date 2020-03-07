@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Drawer, Button, Input, Table, Radio } from 'antd';
+import { Drawer, Button, Input, Table } from 'antd';
 import { HomeAction } from './index';
 import './Home.css';
 
 const { Search } = Input;
 
 let map;
+let infoWindow = new AMap.InfoWindow({
+  isCustom: false, //使用自定义窗体
+  content: '<div id="equipmentBaseInfo"></div>',
+  offset: new AMap.Pixel(0, -32),
+});
+infoWindow.on('close', () =>
+  infoWindow.setContent('<div id="equipmentBaseInfo"></div>'),
+);
 const columns = [
   {
     title: '设备名称',
@@ -21,8 +30,13 @@ const columns = [
 
 const Home = props => {
   const { state, action } = props;
-  const { equipmentData, equipmentListData, tableIsLoading } = state;
-  const { getEquipment, getEquipmentList } = action;
+  const {
+    equipmentData,
+    equipmentListData,
+    tableIsLoading,
+    equipmentBaseInfo,
+  } = state;
+  const { getEquipment, getEquipmentList, getEquipmentBaseInfo } = action;
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   useEffect(() => {
@@ -39,12 +53,29 @@ const Home = props => {
     return () => map.destroy();
   }, [getEquipment]);
   useEffect(() => {
+    console.log('执行设置内容');
+    infoWindow.setContent(
+      `<div id="equipmentBaseInfo">
+       <p><b>设备ID:</b><span>${equipmentBaseInfo.cmdId}</span></p>
+       <p><b>设备名称:</b><span>${equipmentBaseInfo.name}</span></p>
+       <p><b>归属:</b><span>${equipmentBaseInfo.userName}</span></p>
+       <p><b>地址:</b><span>${equipmentBaseInfo.address}</span></p>
+      </div>`,
+    );
+  }, [equipmentBaseInfo]);
+  useEffect(() => {
     if (map && equipmentData.equipment && equipmentData.line) {
       // 添加点
       const markerArr = equipmentData.equipment.map(v => {
-        return new AMap.Marker({
+        const marker = new AMap.Marker({
           position: [v.longitude, v.latitude],
         });
+        marker.on('click', () => {
+          const { cmdId } = v;
+          getEquipmentBaseInfo({ cmdId });
+          infoWindow.open(map, marker.getPosition());
+        });
+        return marker;
       });
       map.add(markerArr);
       // 添加线条
@@ -79,7 +110,7 @@ const Home = props => {
       });
       map.add(lineArr);
     }
-  }, [equipmentData]);
+  }, [equipmentData, getEquipmentBaseInfo]);
 
   // 移动视图至中心
   const setMapToCenter = cmdId => {
@@ -165,6 +196,7 @@ const mapDispatchToProps = dispatch => {
       {
         getEquipment: HomeAction.getEquipment,
         getEquipmentList: HomeAction.getEquipmentList,
+        getEquipmentBaseInfo: HomeAction.getEquipmentBaseInfo,
       },
       dispatch,
     ),
