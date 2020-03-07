@@ -14,9 +14,7 @@ let infoWindow = new AMap.InfoWindow({
   content: '<div id="equipmentBaseInfo"></div>',
   offset: new AMap.Pixel(0, -32),
 });
-infoWindow.on('close', () =>
-  infoWindow.setContent('<div id="equipmentBaseInfo"></div>'),
-);
+
 const columns = [
   {
     title: '设备名称',
@@ -53,7 +51,6 @@ const Home = props => {
     return () => map.destroy();
   }, [getEquipment]);
   useEffect(() => {
-    console.log('执行设置内容');
     infoWindow.setContent(
       `<div id="equipmentBaseInfo">
        <p><b>设备ID:</b><span>${equipmentBaseInfo.cmdId}</span></p>
@@ -72,6 +69,7 @@ const Home = props => {
         });
         marker.on('click', () => {
           const { cmdId } = v;
+          infoWindow.setContent('<div id="equipmentBaseInfo">加载中...</div>');
           getEquipmentBaseInfo({ cmdId });
           infoWindow.open(map, marker.getPosition());
         });
