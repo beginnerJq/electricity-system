@@ -5,6 +5,7 @@ export const SET_EQUIPMENT_LIST = Symbol('SET_EQUIPMENT_LIST');
 export const SET_FORM_FIELDS = Symbol('SET_FORM_FIELDS');
 export const SET_FORM_LOADING = Symbol('SET_FORM_LOADING');
 export const SET_TABLE_LOADING = Symbol('SET_TABLE_LOADING');
+export const GET_EQUIPMENT_DELETE = Symbol('GET_EQUIPMENT_DELETE');
 
 export const getSearchCondition = params => {
   return { type: GET_SEARCH_CONDITION, params };
@@ -27,3 +28,9 @@ export const setFormLoading = status => {
 export const setTableLoading = status => {
   return { type: SET_TABLE_LOADING, status };
 };
+export const getEquipmentDelete = (params, resolve, reject) => ({
+  type: GET_EQUIPMENT_DELETE,
+  params,
+  resolve,
+  reject,
+});

@@ -6,5 +6,7 @@ const searchCondition = (params = {}) => {
 const equipmentList = params => {
   return axios.post('/equipment/list', params);
 };
+// 删除设备
+const equipmentDelete = params => axios.post('/equipment/delete', params);
 
-export { searchCondition, equipmentList };
+export { searchCondition, equipmentList, equipmentDelete };
