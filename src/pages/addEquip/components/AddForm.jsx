@@ -186,9 +186,9 @@ const AddForm = Form.create({})(props => {
       </Row>
       <Row>
         <Col span={colSpan}>
-          <Form.Item label='类型ID'>
+          <Form.Item label='设备类型'>
             {getFieldDecorator('typeId', {
-              rules: [{ required: true, message: '请输入类型ID' }],
+              rules: [{ required: true, message: '请选择设备类型' }],
             })(<Input />)}
           </Form.Item>
         </Col>
