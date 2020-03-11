@@ -11,7 +11,7 @@ const buildPublicPath = '/';
 //代理配置
 const proxy = {
   '/api': {
-    target: 'http://101.133.165.209:8080',
+    target: 'http://106.15.196.149:8080',
     changeOrigin: true,
     pathRewrite: { '^/api': '' },
   },

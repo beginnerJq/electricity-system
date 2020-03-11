@@ -10,6 +10,9 @@
 #equipmentBaseInfo > p {
   display: flex;
 }
+#equipmentBaseInfo > p:last-child {
+  margin-bottom: 0;
+}
 #equipmentBaseInfo b {
   flex-basis: 30%;
   text-align: right;

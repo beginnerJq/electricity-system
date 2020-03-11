@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer, Button, Input, Table } from 'antd';
+import { equipmentStatus } from 'utils/backFields';
 import { HomeAction } from './index';
 import './Home.css';
-import buleMarker from './img/position-fill-blue.png';
-import redMarker from './img/position-fill-red.png';
 
 const { Search } = Input;
 
@@ -58,6 +57,9 @@ const Home = props => {
        <p><b>设备名称:</b><span>${equipmentBaseInfo.name}</span></p>
        <p><b>归属:</b><span>${equipmentBaseInfo.userName}</span></p>
        <p><b>地址:</b><span>${equipmentBaseInfo.address}</span></p>
+       <p><b>设备状态:</b><span>${
+         equipmentStatus[equipmentBaseInfo.status]
+       }</span></p>
       </div>`,
     );
   }, [equipmentBaseInfo]);
