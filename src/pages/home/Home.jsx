@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { Drawer, Button, Input, Table } from 'antd';
 import { HomeAction } from './index';
 import './Home.css';
+import buleMarker from './img/position-fill-blue.png';
+import redMarker from './img/position-fill-red.png';
 
 const { Search } = Input;
 
@@ -64,7 +66,12 @@ const Home = props => {
       // 添加点
       const markerArr = equipmentData.equipment.map(v => {
         const marker = new AMap.Marker({
+          icon:
+            v.status === 0
+              ? 'http://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png'
+              : 'http://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png',
           position: [v.longitude, v.latitude],
+          offset: new AMap.Pixel(-13, -30),
         });
         marker.on('click', () => {
           const { cmdId } = v;

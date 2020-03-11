@@ -29,7 +29,6 @@ const LayoutComponent = props => {
   return (
     <Layout style={{ minHeight: '100vh' }} styleName='layout'>
       <Sider collapsible>
-        <h1 styleName='title'>输电线路分布式故障诊断系统</h1>
         <Menu
           theme='dark'
           mode='inline'
@@ -53,7 +52,14 @@ const LayoutComponent = props => {
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff' }}>
+        <Header
+          style={{
+            background: '#fff',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <h1 styleName='title'>输电线路分布式故障诊断系统</h1>
           <Dropdown overlay={menu}>
             <div styleName='avatar-wrap'>
               <span>

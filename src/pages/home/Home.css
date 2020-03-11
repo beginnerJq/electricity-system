@@ -20,3 +20,8 @@
   text-align: left;
   word-break: break-all;
 }
+.amap-icon img,
+.amap-marker-content img {
+  width: 25px;
+  height: 34px;
+}
