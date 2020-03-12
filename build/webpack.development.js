@@ -28,6 +28,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: join(srcDir, './index.html'),
       cache: true,
+      favicon: join(srcDir, './static/img/icon.png'),
     }),
     new HardSourceWebpackPlugin(),
   ],

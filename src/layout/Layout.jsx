@@ -5,6 +5,7 @@ import { history } from 'utils/history';
 import { getUserInfo, setUserInfo } from 'utils/userInfo';
 import { isLogin } from 'utils/globalName';
 import Routes, { allRoutesConfig } from '../routes';
+import icon from '../static/img/icon.png';
 import './Layout.pcss';
 
 const { Header, Sider, Content } = Layout;
@@ -54,12 +55,15 @@ const LayoutComponent = props => {
       <Layout>
         <Header
           style={{
-            background: '#fff',
+            background: '#f5f5f5',
             display: 'flex',
             justifyContent: 'space-between',
           }}
         >
-          <h1 styleName='title'>输电线路分布式故障诊断系统</h1>
+          <h1 styleName='title'>
+            <img src={icon} alt='顿恒科技' width='54' height='54' />
+            输电线路分布式故障诊断系统
+          </h1>
           <Dropdown overlay={menu}>
             <div styleName='avatar-wrap'>
               <span>

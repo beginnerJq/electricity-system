@@ -54,7 +54,7 @@ module.exports = {
     'react/jsx-indent-props': 'off',
     'react/no-did-update-set-state': 'off',
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     indent: [
       'off',
       2,

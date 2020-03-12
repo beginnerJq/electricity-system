@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Line } from '@antv/g2plot';
 import {
+  Table,
   Tabs,
   Skeleton,
   Form,
@@ -13,11 +14,13 @@ import {
   Row,
   Col,
   Button,
+  Modal,
 } from 'antd';
 import { DetailsAction } from './index';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
+const { confirm } = Modal;
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -136,8 +139,14 @@ const CurveComponent = props => {
 
 const Details = props => {
   const {
-    state: { isLoading, baseInfo, workCondition, curve },
-    action: { getBaseInfo, getWorkCondition, getCurve },
+    state: { isLoading, baseInfo, workCondition, curve, breakdownList },
+    action: {
+      getBaseInfo,
+      getWorkCondition,
+      getCurve,
+      getBreakdownList,
+      getBreakdownCheck,
+    },
   } = props;
   const { state: locationState } = useLocation();
   const { push, goBack } = useHistory();
@@ -149,6 +158,58 @@ const Details = props => {
       goBack();
     }
   }, [getBaseInfo, goBack, locationState]);
+
+  // 故障列表 columns
+  const columns = [
+    {
+      title: '故障id',
+      dataIndex: 'id',
+    },
+    {
+      title: '故障信息',
+      dataIndex: 'info',
+    },
+    {
+      title: '故障时间',
+      dataIndex: 'time',
+    },
+    {
+      title: '故障状态',
+      dataIndex: 'status',
+      render(text) {
+        return text === 0 ? '未确认' : '已确认';
+      },
+    },
+    {
+      title: '操作',
+      render(undefined, { id: breakdownId }) {
+        return (
+          <a
+            onClick={() => {
+              confirm({
+                title: '故障确认',
+                content: '是否确认故障?',
+                onOk() {
+                  return new Promise((resolve, reject) => {
+                    getBreakdownCheck({ breakdownId }, resolve, reject);
+                  })
+                    .then(() => {
+                      let { cmdId } = locationState;
+                      getBreakdownList({ cmdId, pageNum: 1, pageSize: 10 });
+                    })
+                    .catch(err => console.log(err));
+                },
+                onCancel() {},
+              });
+            }}
+          >
+            故障确认
+          </a>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <Button icon='rollback' onClick={() => push('/equip')}>
@@ -161,6 +222,8 @@ const Details = props => {
           let { cmdId } = locationState;
           if (activeKey == 2) {
             getCurve({ cmdId, skip: 1, type: 0 });
+          } else if (activeKey == 3) {
+            getBreakdownList({ cmdId, pageNum: 1, pageSize: 10 });
           } else {
             callArr[activeKey]({ cmdId });
           }
@@ -208,6 +271,20 @@ const Details = props => {
         <TabPane tab='曲线图' key='2'>
           <CurveComponent curve={curve} getCurve={getCurve} />
         </TabPane>
+        <TabPane tab='故障列表' key='3'>
+          <Table
+            rowKey='id'
+            columns={columns}
+            dataSource={breakdownList.list}
+            pagination={{
+              current: breakdownList.pageNum,
+              onChange: page => {
+                getBreakdownList({ cmdId, pageNum: page });
+              },
+            }}
+            loading={isLoading}
+          />
+        </TabPane>
       </Tabs>
     </>
   );
@@ -223,6 +300,8 @@ const mapDiapatchToProps = dispatch => {
         getBaseInfo: DetailsAction.getBaseInfo,
         getWorkCondition: DetailsAction.getWorkCondition,
         getCurve: DetailsAction.getCurve,
+        getBreakdownList: DetailsAction.getBreakdownList,
+        getBreakdownCheck: DetailsAction.getBreakdownCheck,
       },
       dispatch,
     ),

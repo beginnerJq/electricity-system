@@ -3,6 +3,7 @@ import {
   SET_BASE_INFO,
   SET_WORK_CONDITION,
   SET_CURVE,
+  SET_BREAKDOWN_LIST,
 } from './actions';
 
 const initState = {
@@ -11,6 +12,11 @@ const initState = {
   workCondition: {},
   curve: {
     data: '',
+  },
+  breakdownList: {
+    pageNum: 10,
+    count: 0,
+    list: [],
   },
 };
 
@@ -24,6 +30,8 @@ const reducer = (state = initState, action) => {
       return { ...state, workCondition: action.res };
     case SET_CURVE:
       return { ...state, curve: action.res };
+    case SET_BREAKDOWN_LIST:
+      return { ...state, breakdownList: action.res };
     default:
       return state;
   }

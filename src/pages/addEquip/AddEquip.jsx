@@ -18,6 +18,10 @@ const mapDispatchToProps = dispatch => {
       {
         getAddEquip: AddEquipAction.getAddEquip,
         setIsSuccess: AddEquipAction.setIsSuccess,
+        getEquipmentType: AddEquipAction.getEquipmentType,
+        getFindForUpdate: AddEquipAction.getFindForUpdate,
+        getEquipmentUpdate: AddEquipAction.getEquipmentUpdate,
+        setFindForUpdate: AddEquipAction.setFindForUpdate,
       },
       dispatch,
     ),

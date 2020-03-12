@@ -12,6 +12,7 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const smp = new SpeedMeasurePlugin();
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 let isMinicss = _modeProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
@@ -122,6 +123,9 @@ const common = smp.wrap({
       suppressSuccess: true,
     }),
     new ProgressBarPlugin(),
+    new MomentLocalesPlugin({
+      localesToKeep: ['zh-cn'],
+    }),
   ],
 });
 

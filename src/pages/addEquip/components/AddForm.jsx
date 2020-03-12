@@ -9,6 +9,8 @@ import {
   Button,
   message,
 } from 'antd';
+import { history } from 'utils/history';
+import { moment } from 'utils/moment';
 import './AddForm.less';
 
 const { Option } = Select;
@@ -31,8 +33,20 @@ let inputCountyValue;
 
 const AddForm = Form.create({})(props => {
   const {
-    state: { isLoading, isSuccess },
-    action: { getAddEquip, setIsSuccess },
+    location: { state: locationState },
+  } = history;
+  // 获取设备目录传入的cmdId
+  const cmdId = locationState ? locationState.cmdId : null;
+  const {
+    state: { isLoading, isSuccess, equipmentType, updateData },
+    action: {
+      getAddEquip,
+      setIsSuccess,
+      getEquipmentType,
+      getFindForUpdate,
+      setFindForUpdate,
+      getEquipmentUpdate,
+    },
     form: {
       getFieldDecorator,
       setFieldsValue,
@@ -47,8 +61,15 @@ const AddForm = Form.create({})(props => {
     district: [],
   });
   useEffect(() => {
+    getEquipmentType();
+    if (cmdId) {
+      getFindForUpdate({ cmdId });
+    }
+    return () => setFindForUpdate({});
+  }, [cmdId, getEquipmentType, getFindForUpdate, setFindForUpdate]);
+  useEffect(() => {
     if (isSuccess) {
-      message.success('提交成功!');
+      message.success('设备添加成功!');
       resetFields();
       setIsSuccess(false);
     }
@@ -84,7 +105,19 @@ const AddForm = Form.create({})(props => {
     validateFields((errors, values) => {
       if (!errors) {
         let productionDate = values.productionDate.format('YYYY-MM-DD');
-        getAddEquip({ ...values, productionDate });
+        let params = { ...values, productionDate };
+        //cmdId ? getEquipmentUpdate() : getAddEquip(params);
+        if (cmdId) {
+          new Promise((resolve, reject) => {
+            getEquipmentUpdate(params, resolve, reject);
+          })
+            .then(() => {
+              message.success('设备修改成功!');
+            })
+            .catch(() => {});
+        } else {
+          getAddEquip(params);
+        }
       }
     });
   };
@@ -158,7 +191,9 @@ const AddForm = Form.create({})(props => {
   }
   function search(value, { props: { level, adcode } }) {
     // 更新外部值
-    inputCountyValue = value;
+    if (level == 'district') {
+      inputCountyValue = value;
+    }
     //清除地图上所有覆盖物
     for (var i = 0, l = polygons.length; i < l; i++) {
       polygons[i].setMap(null);
@@ -174,221 +209,254 @@ const AddForm = Form.create({})(props => {
     });
   }
   return (
-    <Form {...formItemLayout} onSubmit={handleSubmit}>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='设备ID'>
-            {getFieldDecorator('cmdId', {
-              rules: [{ required: true, message: '请输入设备ID' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='设备类型'>
-            {getFieldDecorator('typeId', {
-              rules: [{ required: true, message: '请选择设备类型' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='设备名称'>
-            {getFieldDecorator('name', {
-              rules: [{ required: true, message: '请输入设备名称' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='型号'>
-            {getFieldDecorator('model', {
-              rules: [{ required: true, message: '请输入型号' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='版本号'>
-            {getFieldDecorator('version', {
-              rules: [{ required: true, message: '请输入版本号' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='生产厂家'>
-            {getFieldDecorator('manufacturer', {
-              rules: [{ required: true, message: '请输入生产厂家' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='生产日期'>
-            {getFieldDecorator('productionDate', {
-              rules: [{ required: true, message: '请选择生产日期' }],
-            })(<DatePicker />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='出厂编号'>
-            {getFieldDecorator('identifier', {
-              rules: [{ required: true, message: '请输入出厂编号' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={20}>
-          <div id='AddEquipMapContainer'>
-            <div className='regionSelect'>
-              <h6>设备所在区域选择</h6>
-              <Form.Item label='省市区'>
-                {getFieldDecorator('province', {
-                  rules: [{ required: true, message: '请选择省份' }],
-                })(
-                  <Select onChange={search} placeholder='--请选择--'>
-                    {selectRegion.province.map(v => {
-                      const { name, level, adcode } = v;
-                      return (
-                        <Option
-                          key={name}
-                          value={name}
-                          level={level}
-                          adcode={adcode}
-                        >
-                          {name}
-                        </Option>
-                      );
-                    })}
-                  </Select>,
-                )}
-              </Form.Item>
-              <Form.Item label='地级市'>
-                {getFieldDecorator('city', {
-                  rules: [{ required: true, message: '请选择所在市' }],
-                })(
-                  <Select onChange={search} placeholder='--请选择--'>
-                    {selectRegion.city.map(v => {
-                      const { name, level, adcode } = v;
-                      return (
-                        <Option
-                          key={name}
-                          value={name}
-                          level={level}
-                          adcode={adcode}
-                        >
-                          {name}
-                        </Option>
-                      );
-                    })}
-                  </Select>,
-                )}
-              </Form.Item>
-              <Form.Item label='区县'>
-                {getFieldDecorator('county', {
-                  rules: [{ required: true, message: '请选择或输入所在区县' }],
-                })(
-                  <Select
-                    onChange={search}
-                    placeholder='--请选择或输入--'
-                    showSearch
-                    onSearch={v => {
-                      if (v) {
-                        inputCountyValue = v;
-                      }
-                    }}
-                    onBlur={() => {
-                      setFieldsValue({ county: inputCountyValue });
-                    }}
-                  >
-                    {selectRegion.district.map(v => {
-                      const { name, level, adcode } = v;
-                      return (
-                        <Option
-                          key={name}
-                          value={name}
-                          level={level}
-                          adcode={adcode}
-                        >
-                          {name}
-                        </Option>
-                      );
-                    })}
-                  </Select>,
-                )}
-              </Form.Item>
+    <>
+      {cmdId && (
+        <Button icon='rollback' onClick={() => history.push('/equip')}>
+          返回
+        </Button>
+      )}
+      <Form {...formItemLayout} onSubmit={handleSubmit}>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='设备ID'>
+              {getFieldDecorator('cmdId', {
+                initialValue: updateData.cmdId,
+                rules: [{ required: true, message: '请输入设备ID' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='设备类型'>
+              {getFieldDecorator('typeId', {
+                initialValue: updateData.typeId,
+                rules: [{ required: true, message: '请选择设备类型' }],
+              })(
+                <Select>
+                  {equipmentType.map(v => (
+                    <Option key={v.id} value={v.id}>
+                      {v.typeName}
+                    </Option>
+                  ))}
+                </Select>,
+              )}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='设备名称'>
+              {getFieldDecorator('name', {
+                initialValue: updateData.name,
+                rules: [{ required: true, message: '请输入设备名称' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='型号'>
+              {getFieldDecorator('model', {
+                initialValue: updateData.model,
+                rules: [{ required: true, message: '请输入型号' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='版本号'>
+              {getFieldDecorator('version', {
+                initialValue: updateData.version,
+                rules: [{ required: true, message: '请输入版本号' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='生产厂家'>
+              {getFieldDecorator('manufacturer', {
+                initialValue: updateData.manufacturer,
+                rules: [{ required: true, message: '请输入生产厂家' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='生产日期'>
+              {getFieldDecorator('productionDate', {
+                initialValue: moment(updateData.productionDate),
+                rules: [{ required: true, message: '请选择生产日期' }],
+              })(<DatePicker />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='出厂编号'>
+              {getFieldDecorator('identifier', {
+                initialValue: updateData.identifier,
+                rules: [{ required: true, message: '请输入出厂编号' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={20}>
+            <div id='AddEquipMapContainer'>
+              <div className='regionSelect'>
+                <h6>设备所在区域选择</h6>
+                <Form.Item label='省市区'>
+                  {getFieldDecorator('province', {
+                    initialValue: updateData.province,
+                    rules: [{ required: true, message: '请选择省份' }],
+                  })(
+                    <Select onChange={search} placeholder='--请选择--'>
+                      {selectRegion.province.map(v => {
+                        const { name, level, adcode } = v;
+                        return (
+                          <Option
+                            key={name}
+                            value={name}
+                            level={level}
+                            adcode={adcode}
+                          >
+                            {name}
+                          </Option>
+                        );
+                      })}
+                    </Select>,
+                  )}
+                </Form.Item>
+                <Form.Item label='地级市'>
+                  {getFieldDecorator('city', {
+                    initialValue: updateData.city,
+                    rules: [{ required: true, message: '请选择所在市' }],
+                  })(
+                    <Select onChange={search} placeholder='--请选择--'>
+                      {selectRegion.city.map(v => {
+                        const { name, level, adcode } = v;
+                        return (
+                          <Option
+                            key={name}
+                            value={name}
+                            level={level}
+                            adcode={adcode}
+                          >
+                            {name}
+                          </Option>
+                        );
+                      })}
+                    </Select>,
+                  )}
+                </Form.Item>
+                <Form.Item label='区县'>
+                  {getFieldDecorator('county', {
+                    initialValue: updateData.county,
+                    rules: [
+                      { required: true, message: '请选择或输入所在区县' },
+                    ],
+                  })(
+                    <Select
+                      onChange={search}
+                      placeholder='--请选择或输入--'
+                      showSearch
+                      onSearch={v => {
+                        if (v) {
+                          inputCountyValue = v;
+                        }
+                      }}
+                      onBlur={() => {
+                        setFieldsValue({ county: inputCountyValue });
+                      }}
+                    >
+                      {selectRegion.district.map(v => {
+                        const { name, level, adcode } = v;
+                        return (
+                          <Option
+                            key={name}
+                            value={name}
+                            level={level}
+                            adcode={adcode}
+                          >
+                            {name}
+                          </Option>
+                        );
+                      })}
+                    </Select>,
+                  )}
+                </Form.Item>
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='经度'>
-            {getFieldDecorator('longitude', {
-              rules: [{ required: true, message: '点击地图获取经度' }],
-            })(<Input placeholder='点击上方地图区域获取' readOnly />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='纬度'>
-            {getFieldDecorator('latitude', {
-              rules: [{ required: true, message: '点击地图获取纬度' }],
-            })(<Input placeholder='点击上方地图区域获取' readOnly />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='详细地址'>
-            {getFieldDecorator('locationDetail', {
-              rules: [{ required: true, message: '点击地图获取详细地址' }],
-            })(<Input placeholder='点击上方地图区域获取' />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='所在线'>
-            {getFieldDecorator('line', {
-              rules: [{ required: true, message: '请输入所在线' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Form.Item label='所在杆'>
-            {getFieldDecorator('pole', {
-              rules: [{ required: true, message: '请输入所在杆' }],
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={4} offset={8}>
-          <Button
-            type='primary'
-            size='large'
-            htmlType='submit'
-            loading={isLoading}
-          >
-            提交
-          </Button>
-        </Col>
-      </Row>
-    </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='经度'>
+              {getFieldDecorator('longitude', {
+                initialValue: updateData.longitude,
+                rules: [{ required: true, message: '点击地图获取经度' }],
+              })(<Input placeholder='点击上方地图区域获取' readOnly />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='纬度'>
+              {getFieldDecorator('latitude', {
+                initialValue: updateData.latitude,
+                rules: [{ required: true, message: '点击地图获取纬度' }],
+              })(<Input placeholder='点击上方地图区域获取' readOnly />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='详细地址'>
+              {getFieldDecorator('locationDetail', {
+                initialValue: updateData.locationDetail,
+                rules: [{ required: true, message: '点击地图获取详细地址' }],
+              })(<Input placeholder='点击上方地图区域获取' />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='所在线'>
+              {getFieldDecorator('line', {
+                initialValue: updateData.line,
+                rules: [{ required: true, message: '请输入所在线' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={colSpan}>
+            <Form.Item label='所在杆'>
+              {getFieldDecorator('pole', {
+                initialValue: updateData.pole,
+                rules: [{ required: true, message: '请输入所在杆' }],
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={4} offset={8}>
+            <Button
+              type='primary'
+              size='large'
+              htmlType='submit'
+              loading={isLoading}
+            >
+              {cmdId ? '修改设备' : '添加设备'}
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </>
   );
 });
 

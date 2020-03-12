@@ -6,15 +6,24 @@ import {
   takeLatest,
   takeLeading,
 } from 'redux-saga/effects';
-import { baseInfo, workCondition, curve } from '../api';
+import {
+  baseInfo,
+  workCondition,
+  curve,
+  breakdownList,
+  breakdownCheck,
+} from '../api';
 import {
   GET_BASE_INFO,
   GET_WORK_CONDITION,
   GET_CURVE,
+  GET_BREAKDOWN_LIST,
+  GET_BREAKDOWN_CHECK,
   isLoading,
   setBaseInfo,
   setWorkCondition,
   setCurve,
+  setBreakdownList,
 } from './actions';
 import { action } from 'mobx';
 
@@ -61,10 +70,38 @@ function* watchGetCurve() {
   yield takeLeading(GET_CURVE, getCurve);
 }
 
+// 获取设备故障列表
+function* getBreakdownList(action) {
+  yield put(isLoading(true));
+  try {
+    const { code, data } = yield call(breakdownList, action.params);
+    if (code == 200) {
+      yield put(setBreakdownList(data));
+    }
+  } catch {}
+  yield put(isLoading(false));
+}
+function* watchGetBreakdownList() {
+  yield takeLatest(GET_BREAKDOWN_LIST, getBreakdownList);
+}
+
+// 故障确认
+function* getBreakdownCheck(action) {
+  try {
+    const { code } = yield call(breakdownCheck, action.params);
+    code == 200 ? action.resolve() : action.reject();
+  } catch {}
+}
+function* watchGetBreakdownCheck() {
+  yield takeLeading(GET_BREAKDOWN_CHECK, getBreakdownCheck);
+}
+
 export default function*() {
   yield all([
     fork(watchGetBaseInfo),
     fork(watchGetWorkCondition),
     fork(watchGetCurve),
+    fork(watchGetBreakdownList),
+    fork(watchGetBreakdownCheck),
   ]);
 }

@@ -72,6 +72,7 @@ module.exports = {
       minify: {
         collapseWhitespace: true,
       },
+      favicon: join(srcDir, './static/img/icon.png'),
     }),
     new ScriptExtHtmlWebpackPlugin({
       inline: /runtime~.*\.js$/,

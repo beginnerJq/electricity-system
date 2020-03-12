@@ -9,4 +9,8 @@ const workCondition = params => {
 const curve = params => {
   return axios.post('/equipment/curve', params);
 };
-export { baseInfo, workCondition, curve };
+const breakdownList = params => axios.post('/equipment/breakdown/list', params);
+const breakdownCheck = params =>
+  axios.post('/equipment/breakdown/check', params);
+
+export { baseInfo, workCondition, curve, breakdownList, breakdownCheck };

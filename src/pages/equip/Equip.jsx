@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Table, Tooltip, Icon, Button, Modal, message } from 'antd';
 import { exportFile } from 'utils/xlsx';
 import { history } from 'utils/history';
+import { equipmentStatus } from 'utils/backFields';
 import { EquipAction } from './index';
 import SearchForm from './components/SearchForm';
 import styles from './Equip.pcss';
@@ -47,6 +48,13 @@ const Equip = props => {
       dataIndex: 'address',
     },
     {
+      title: '设备状态',
+      dataIndex: 'status',
+      render(text) {
+        return equipmentStatus[text];
+      },
+    },
+    {
       title: '操作',
       render(text, record) {
         const { cmdId } = record;
@@ -58,7 +66,7 @@ const Equip = props => {
               </span>
             </Tooltip>
             <Tooltip title='编辑'>
-              <span>
+              <span onClick={() => history.push('/addEquip', { cmdId })}>
                 <Icon type='edit' theme='filled' />
               </span>
             </Tooltip>
