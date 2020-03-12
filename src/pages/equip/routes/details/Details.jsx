@@ -15,6 +15,7 @@ import {
   Col,
   Button,
   Modal,
+  message,
 } from 'antd';
 import { DetailsAction } from './index';
 
@@ -182,10 +183,18 @@ const Details = props => {
     },
     {
       title: '操作',
-      render(undefined, { id: breakdownId }) {
+      render(undefined, { id: breakdownId, status }) {
+        const confirmed = status === 1;
         return (
           <a
+            style={{
+              cursor: confirmed ? 'not-allowed' : 'pointer',
+            }}
             onClick={() => {
+              if (confirmed) {
+                message.error('状态已确认');
+                return;
+              }
               confirm({
                 title: '故障确认',
                 content: '是否确认故障?',

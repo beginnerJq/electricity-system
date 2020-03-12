@@ -40,6 +40,7 @@ const Home = props => {
   useEffect(() => {
     if (typeof AMap != 'undefined') {
       map = new AMap.Map('HomeMapContainer', {
+        resizeEnable: true,
         zoom: 11, //级别
         viewMode: '2D',
       });
