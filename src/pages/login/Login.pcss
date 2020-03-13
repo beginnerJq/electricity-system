@@ -1,17 +1,25 @@
 .login-container {
+  display: flex;
   height: 100vh;
   overflow: auto;
-  background: #f0f2f5;
+  background: linear-gradient(#c4ebfd, #fff);
 }
 .login-wrap {
-  max-width: 300px;
-  margin: 100px auto 0;
+  min-width: 500px;
+  flex: auto;
+  h1 {
+    margin-top: 200px;
+    text-align: center;
+  }
 }
-@media (min-width: 768px) {
+.login-tabs {
+  max-width: 300px;
+}
+/* @media (min-width: 768px) {
   .login-container {
     background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100%;
   }
-}
+} */

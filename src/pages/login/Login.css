@@ -1,3 +1,21 @@
 #login-wrap .ant-tabs-bar {
   text-align: center;
 }
+#login-wrap .ant-tabs {
+  max-width: 300px;
+  margin: 50px auto 0;
+}
+#bg-wrap {
+  flex: 0 1 600px;
+  animation: move_bg 6s ease-in-out 0s infinite alternate;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+@keyframes move_bg {
+  from {
+    background-image: url('./img/bg1.jpg');
+  }
+  to {
+    background-image: url('./img/bg2.jpg');
+  }
+}

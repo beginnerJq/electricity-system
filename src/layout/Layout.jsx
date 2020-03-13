@@ -61,8 +61,8 @@ const LayoutComponent = props => {
           }}
         >
           <h1 styleName='title'>
-            <img src={icon} alt='顿恒科技' width='54' height='54' />
-            输电线路分布式故障诊断系统
+            <img src={icon} alt='顿恒科技' width='40' height='40' />
+            <span>输电线路分布式故障诊断系统</span>
           </h1>
           <Dropdown overlay={menu}>
             <div styleName='avatar-wrap'>

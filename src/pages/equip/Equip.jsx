@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Table, Tooltip, Icon, Button, Modal, message } from 'antd';
 import { exportFile } from 'utils/xlsx';
 import { history } from 'utils/history';
-import { equipmentStatus } from 'utils/backFields';
+import { equipmentStatus, equipmentStatusColor } from 'utils/backFields';
 import { EquipAction } from './index';
 import SearchForm from './components/SearchForm';
 import styles from './Equip.pcss';
@@ -51,7 +51,11 @@ const Equip = props => {
       title: '设备状态',
       dataIndex: 'status',
       render(text) {
-        return equipmentStatus[text];
+        return (
+          <span style={{ color: equipmentStatusColor[text] }}>
+            {equipmentStatus[text]}
+          </span>
+        );
       },
     },
     {

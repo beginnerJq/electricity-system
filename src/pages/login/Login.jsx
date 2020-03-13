@@ -14,7 +14,9 @@ const Login = props => {
   const { state, action } = props;
   return (
     <div styleName='styles.login-container'>
+      <div id='bg-wrap'></div>
       <div styleName='styles.login-wrap' id='login-wrap'>
+        <h1>输电线路分布式故障诊断系统</h1>
         <Tabs>
           <TabPane key='userlogin' tab='用户名登录'>
             <UserComponent

@@ -4,3 +4,8 @@ export const equipmentStatus = {
   1: '设备离线',
   2: '设备故障',
 };
+export const equipmentStatusColor = {
+  0: 'green',
+  1: 'red',
+  2: 'yellow',
+};
