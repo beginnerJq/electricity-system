@@ -101,8 +101,7 @@ const CurveFormCompoent = Form.create()(props => {
 const CurveComponent = props => {
   const { curve, getCurve } = props;
   useEffect(() => {
-    console.log(curve.data);
-    const data = curve.data
+    const data = (curve.data || '')
       .split('_')
       .map((v, i) => {
         if (v) {
@@ -151,7 +150,7 @@ const Details = props => {
     },
   } = props;
   const { state: locationState } = useLocation();
-  const { push, goBack } = useHistory();
+  const { goBack } = useHistory();
   useEffect(() => {
     if (locationState && locationState.cmdId) {
       let { cmdId } = locationState;
@@ -225,11 +224,13 @@ const Details = props => {
 
   return (
     <>
-      <Button icon='rollback' onClick={() => push('/equip')}>
+      <Button icon='rollback' onClick={() => goBack()}>
         返回
       </Button>
       <Tabs
-        defaultActiveKey='0'
+        defaultActiveKey={
+          locationState.defaultTabKey ? locationState.defaultTabKey : '0'
+        }
         onChange={activeKey => {
           const callArr = [getBaseInfo, getWorkCondition];
           let { cmdId } = locationState;

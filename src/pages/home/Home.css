@@ -12,6 +12,16 @@
 }
 #equipmentBaseInfo > p:last-child {
   margin-bottom: 0;
+  justify-content: space-evenly;
+}
+#equipmentBaseInfo > p:last-child button {
+  border: none;
+  outline: none;
+  color: #000;
+  background-color: #b2e6ff;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
 }
 #equipmentBaseInfo b {
   flex-basis: 30%;

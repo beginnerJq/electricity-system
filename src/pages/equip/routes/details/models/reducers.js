@@ -10,9 +10,7 @@ const initState = {
   isLoading: false,
   baseInfo: {},
   workCondition: {},
-  curve: {
-    data: '',
-  },
+  curve: {},
   breakdownList: {
     pageNum: 10,
     count: 0,

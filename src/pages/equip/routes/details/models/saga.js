@@ -49,6 +49,8 @@ function* getWorkCondition(action) {
     const { code, data } = yield call(workCondition, action.params);
     if (code == 200) {
       yield put(setWorkCondition(data));
+    } else {
+      yield put(setWorkCondition({}));
     }
   } catch {}
   yield put(isLoading(false));
@@ -63,6 +65,8 @@ function* getCurve(action) {
     const { code, data } = yield call(curve, action.params);
     if (code == 200) {
       yield put(setCurve(data));
+    } else {
+      yield put(setCurve({}));
     }
   } catch {}
 }

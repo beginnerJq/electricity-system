@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import ReactDom from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer, Button, Input, Table } from 'antd';
 import { equipmentStatus } from 'utils/backFields';
+import { history } from 'utils/history';
 import { HomeAction } from './index';
 import './Home.css';
 
@@ -61,8 +63,33 @@ const Home = props => {
        <p><b>设备状态:</b><span>${
          equipmentStatus[equipmentBaseInfo.status]
        }</span></p>
+       <p id="baseInfoButton"></p>
       </div>`,
     );
+    if (infoWindow.getIsOpen() && document.querySelector('#baseInfoButton')) {
+      ReactDom.render(
+        <>
+          <button
+            onClick={() =>
+              history.push('/equip/details', {
+                cmdId: equipmentBaseInfo.cmdId,
+                defaultTabKey: '3',
+              })
+            }
+          >
+            预警信息
+          </button>
+          <button
+            onClick={() =>
+              history.push('/equip/details', { cmdId: equipmentBaseInfo.cmdId })
+            }
+          >
+            历史数据
+          </button>
+        </>,
+        document.querySelector('#baseInfoButton'),
+      );
+    }
   }, [equipmentBaseInfo]);
   useEffect(() => {
     if (map && equipmentData.equipment && equipmentData.line) {
