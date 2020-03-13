@@ -153,12 +153,16 @@ const Details = props => {
   const { goBack } = useHistory();
   useEffect(() => {
     if (locationState && locationState.cmdId) {
-      let { cmdId } = locationState;
-      getBaseInfo({ cmdId });
+      let { cmdId, defaultTabKey } = locationState;
+      if (defaultTabKey) {
+        getBreakdownList({ cmdId, pageNum: 1, pageSize: 10 });
+      } else {
+        getBaseInfo({ cmdId });
+      }
     } else {
       goBack();
     }
-  }, [getBaseInfo, goBack, locationState]);
+  }, [getBaseInfo, getBreakdownList, goBack, locationState]);
 
   // 故障列表 columns
   const columns = [
