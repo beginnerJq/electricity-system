@@ -17,6 +17,7 @@ import {
   Modal,
   message,
 } from 'antd';
+import { moment } from 'utils/moment';
 import { DetailsAction } from './index';
 
 const { TabPane } = Tabs;
@@ -173,6 +174,9 @@ const Details = props => {
     {
       title: '故障时间',
       dataIndex: 'time',
+      render(text) {
+        return moment(text).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
     {
       title: '故障状态',
