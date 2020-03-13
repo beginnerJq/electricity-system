@@ -62,7 +62,7 @@ const CurveFormCompoent = Form.create()(props => {
     validateFields((err, values) => {
       if (!err) {
         //console.log('Received values of form: ', values);
-        getCurve({ cmd: state.cmdId, ...values });
+        getCurve({ cmdId: state.cmdId, ...values });
       }
     });
   };
@@ -149,7 +149,7 @@ const Details = props => {
       getBreakdownCheck,
     },
   } = props;
-  const { state: locationState } = useLocation();
+  const { state: locationState = {} } = useLocation();
   const { goBack } = useHistory();
   useEffect(() => {
     if (locationState && locationState.cmdId) {
