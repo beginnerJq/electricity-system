@@ -78,7 +78,7 @@ const CurveFormCompoent = Form.create()(props => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label='页数'>
+          <Form.Item label='类型'>
             {getFieldDecorator('type', {
               initialValue: 0,
             })(
