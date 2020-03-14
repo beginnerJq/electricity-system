@@ -129,7 +129,7 @@ const CurveComponent = props => {
       title: {
         left: 'left',
         text: '曲线折线图',
-        subtext: curve.timeDetail,
+        subtext: `时间：${curve.timeDetail || ''}`,
       },
       toolbox: {
         feature: {
