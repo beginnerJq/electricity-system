@@ -84,6 +84,7 @@
     "axios": "^0.19.2",
     "babel-plugin-react-css-modules": "^5.2.6",
     "core-js": "^3.6.4",
+    "echarts": "^4.6.0",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.4.0",
     "history": "^4.10.1",

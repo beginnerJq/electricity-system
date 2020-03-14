@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Line } from '@antv/g2plot';
 import {
   Table,
   Tabs,
@@ -19,6 +18,14 @@ import {
 } from 'antd';
 import { moment } from 'utils/moment';
 import { DetailsAction } from './index';
+const echarts = require('echarts/lib/echarts');
+require('echarts/lib/chart/bar');
+require('echarts/lib/chart/line');
+require('echarts/lib/component/tooltip');
+require('echarts/lib/component/title');
+require('echarts/lib/component/legend');
+require('echarts/lib/component/dataZoom');
+require('echarts/lib/component/dataZoomSlider');
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -61,7 +68,6 @@ const CurveFormCompoent = Form.create()(props => {
     e.preventDefault();
     validateFields((err, values) => {
       if (!err) {
-        //console.log('Received values of form: ', values);
         getCurve({ cmdId: state.cmdId, ...values });
       }
     });
@@ -101,39 +107,121 @@ const CurveFormCompoent = Form.create()(props => {
 const CurveComponent = props => {
   const { curve, getCurve } = props;
   useEffect(() => {
-    const data = (curve.data || '')
+    let xData = [],
+      yData = [];
+    (curve.data || '')
       .split('_')
       .map((v, i) => {
         if (v) {
-          return { v, i };
+          xData.push(i);
+          yData.push(v);
         }
       })
       .filter(v => v);
-    const linePlot = new Line(document.getElementById('detailCurve'), {
-      title: {
-        visible: true,
-        text: '曲线折线图',
-      },
-      padding: 'auto',
-      forceFit: true,
-      meta: {
-        v: {
-          alias: '数值',
+    const myChart = echarts.init(document.getElementById('detailCurve'));
+    const option = {
+      tooltip: {
+        trigger: 'axis',
+        position: function(pt) {
+          return [pt[0], '10%'];
         },
       },
-      data,
-      xField: 'i',
-      yField: 'v',
-      smooth: true,
-    });
-
-    linePlot.render();
-    return () => linePlot.destroy();
-  }, [curve.data]);
+      title: {
+        left: 'left',
+        text: '曲线折线图',
+        subtext: curve.timeDetail,
+      },
+      toolbox: {
+        feature: {
+          dataZoom: {},
+          restore: {},
+          saveAsImage: {},
+        },
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: xData,
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%'],
+      },
+      dataZoom: [
+        {
+          type: 'inside',
+          start: 0,
+          end: 10,
+        },
+        {
+          type: 'slider',
+          show: true,
+          yAxisIndex: [0],
+          left: '3%',
+          start: 0,
+          end: 100,
+          handleIcon:
+            'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2,
+          },
+        },
+        {
+          start: 0,
+          end: 10,
+          handleIcon:
+            'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          xAxisIndex: [0],
+          handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2,
+          },
+        },
+      ],
+      series: [
+        {
+          name: '数值',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          sampling: 'average',
+          itemStyle: {
+            color: 'rgb(255, 70, 131)',
+          },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(255, 158, 68)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(255, 70, 131)',
+              },
+            ]),
+          },
+          data: yData,
+        },
+      ],
+    };
+    myChart.setOption(option);
+    return () => {
+      myChart.clear();
+    };
+  }, [curve.data, curve.timeDetail]);
   return (
     <>
       <CurveFormCompoent getCurve={getCurve} />
-      <div id='detailCurve'></div>
+      <div id='detailCurve' style={{ height: 500 }}></div>
     </>
   );
 };
