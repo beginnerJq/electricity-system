@@ -13,6 +13,16 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+const selectItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+  },
+};
 
 const SearchForm = Form.create()(props => {
   const {
@@ -39,7 +49,7 @@ const SearchForm = Form.create()(props => {
 
   return (
     <Form {...formItemLayout} onSubmit={handleSubmit}>
-      <Row>
+      <Row type='flex' justify='space-between'>
         <Col span={8}>
           <Form.Item label='时间范围'>
             {getFieldDecorator('time', {
@@ -47,15 +57,15 @@ const SearchForm = Form.create()(props => {
             })(<RangePicker />)}
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={4}>
           <Form.Item label='设备ID'>
             {getFieldDecorator('cmdId', {
               initialValue: formFields.cmdId,
             })(<Input />)}
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item label='排序方式'>
+        <Col span={4}>
+          <Form.Item label='排序方式' {...selectItemLayout}>
             {getFieldDecorator('orderBy', {
               initialValue: formFields.orderBy,
             })(
@@ -66,9 +76,7 @@ const SearchForm = Form.create()(props => {
             )}
           </Form.Item>
         </Col>
-      </Row>
-      <Row>
-        <Col span={8}>
+        <Col span={5}>
           <Form.Item label='报表类型'>
             {getFieldDecorator('type', {
               initialValue: formFields.type,
@@ -84,7 +92,7 @@ const SearchForm = Form.create()(props => {
             )}
           </Form.Item>
         </Col>
-        <Col span={8} push={2}>
+        <Col span={2}>
           <Button type='primary' size='large' htmlType='submit'>
             查询
           </Button>
