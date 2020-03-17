@@ -52,23 +52,20 @@ const SearchForm = Form.create()(props => {
       <Row type='flex' justify='space-between'>
         <Col span={8}>
           <Form.Item label='时间范围'>
-            {getFieldDecorator('time', {
-              initialValue: formFields.time,
-            })(<RangePicker />)}
+            {getFieldDecorator('time', {})(<RangePicker />)}
           </Form.Item>
         </Col>
         <Col span={4}>
           <Form.Item label='设备ID'>
-            {getFieldDecorator('cmdId', {
-              initialValue: formFields.cmdId,
-            })(<Input />)}
+            {getFieldDecorator('cmdId', {})(<Input />)}
           </Form.Item>
         </Col>
         <Col span={4}>
           <Form.Item label='排序方式' {...selectItemLayout}>
-            {getFieldDecorator('orderBy', {
-              initialValue: formFields.orderBy,
-            })(
+            {getFieldDecorator(
+              'orderBy',
+              {},
+            )(
               <Select>
                 <Option value={0}>降序</Option>
                 <Option value={1}>升序</Option>
@@ -78,9 +75,10 @@ const SearchForm = Form.create()(props => {
         </Col>
         <Col span={5}>
           <Form.Item label='报表类型'>
-            {getFieldDecorator('type', {
-              initialValue: formFields.type,
-            })(
+            {getFieldDecorator(
+              'type',
+              {},
+            )(
               <Select>
                 <Option value=''>不限类型</Option>
                 {alarmType.map(v => (
