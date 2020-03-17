@@ -36,7 +36,7 @@ const SearchForm = Form.create()(props => {
     validateFields((err, vals) => {
       if (!err) {
         let time;
-        if (Array.isArray(vals.time)) {
+        if (Array.isArray(vals.time) && vals.time.length > 0) {
           time = [
             vals.time[0].format('YYYY-MM-DD'),
             vals.time[1].format('YYYY-MM-DD'),

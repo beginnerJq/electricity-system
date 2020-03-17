@@ -14,6 +14,7 @@ import {
   Col,
   Button,
   Modal,
+  DatePicker,
   message,
 } from 'antd';
 import { moment } from 'utils/moment';
@@ -30,6 +31,7 @@ require('echarts/lib/component/dataZoomSlider');
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { confirm } = Modal;
+const { RangePicker } = DatePicker;
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -68,14 +70,22 @@ const CurveFormCompoent = Form.create()(props => {
     e.preventDefault();
     validateFields((err, values) => {
       if (!err) {
-        getCurve({ cmdId: state.cmdId, ...values });
+        let dateStart, dateEnd;
+        const { time, ...rest } = values;
+        if (Array.isArray(time) && time.length > 0) {
+          [dateStart, dateEnd] = [
+            time[0].format('YYYY-MM-DD'),
+            time[1].format('YYYY-MM-DD'),
+          ];
+        }
+        getCurve({ cmdId: state.cmdId, dateStart, dateEnd, ...rest });
       }
     });
   };
   return (
     <Form {...formItemLayout} onSubmit={handleSubmit}>
       <Row type='flex' justify='space-between'>
-        <Col span={8}>
+        <Col span={6}>
           <Form.Item label='页数'>
             {getFieldDecorator('skip', {
               initialValue: 1,
@@ -84,6 +94,11 @@ const CurveFormCompoent = Form.create()(props => {
           </Form.Item>
         </Col>
         <Col span={8}>
+          <Form.Item label='时间范围'>
+            {getFieldDecorator('time', {})(<RangePicker />)}
+          </Form.Item>
+        </Col>
+        <Col span={6}>
           <Form.Item label='类型'>
             {getFieldDecorator('type', {
               initialValue: 0,
@@ -95,7 +110,7 @@ const CurveFormCompoent = Form.create()(props => {
             )}
           </Form.Item>
         </Col>
-        <Col span={4}>
+        <Col span={2}>
           <Button htmlType='submit' type='primary' size='large'>
             绘制
           </Button>

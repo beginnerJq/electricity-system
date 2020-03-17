@@ -55,7 +55,7 @@ const Warning = props => {
         columns={columns}
         dataSource={alarmList.list}
         loading={tableIsLoading}
-        rowKey={record => record.cmdId}
+        rowKey={record => record.id}
         pagination={{ current: alarmList.pageNum, total: alarmList.count }}
         rowSelection={{
           onChange: (selectedRowKeys, selectedRows) => {
