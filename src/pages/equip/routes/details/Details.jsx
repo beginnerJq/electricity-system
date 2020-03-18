@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -8,7 +8,6 @@ import {
   Skeleton,
   Form,
   Input,
-  InputNumber,
   Select,
   Row,
   Col,
@@ -84,18 +83,18 @@ const CurveFormCompoent = Form.create()(props => {
   };
   return (
     <Form {...formItemLayout} onSubmit={handleSubmit}>
-      <Row type='flex' justify='space-between'>
-        <Col span={6}>
+      <Row type='flex' justify='space-around'>
+        {/* <Col span={6}>
           <Form.Item label='页数'>
             {getFieldDecorator('skip', {
               initialValue: 1,
               rules: [{ required: true, message: '页数为必填项！' }],
             })(<InputNumber min={1} size='large' precision={0} />)}
           </Form.Item>
-        </Col>
+        </Col> */}
         <Col span={8}>
-          <Form.Item label='时间范围'>
-            {getFieldDecorator('time', {})(<RangePicker />)}
+          <Form.Item label='时间选择'>
+            {getFieldDecorator('timeDetail', {})(<RangePicker />)}
           </Form.Item>
         </Col>
         <Col span={6}>
@@ -112,7 +111,7 @@ const CurveFormCompoent = Form.create()(props => {
         </Col>
         <Col span={2}>
           <Button htmlType='submit' type='primary' size='large'>
-            绘制
+            查询可选时间
           </Button>
         </Col>
       </Row>
@@ -120,11 +119,15 @@ const CurveFormCompoent = Form.create()(props => {
   );
 });
 const CurveComponent = props => {
-  const { curve, getCurve } = props;
+  const { curve /* [] */, getCurve } = props;
+  const [currentCurve, setCurrentCurve] = useState({});
+  useEffect(() => {
+    setCurrentCurve(curve[0] || {});
+  }, [curve]);
   useEffect(() => {
     let xData = [],
       yData = [];
-    (curve.data || '')
+    (currentCurve.data || '')
       .split('_')
       .map((v, i) => {
         if (v) {
@@ -144,7 +147,7 @@ const CurveComponent = props => {
       title: {
         left: 'left',
         text: '曲线折线图',
-        subtext: `时间：${curve.timeDetail || ''}`,
+        subtext: `时间：${currentCurve.timeDetail || ''}`,
       },
       toolbox: {
         feature: {
@@ -232,10 +235,30 @@ const CurveComponent = props => {
     return () => {
       myChart.clear();
     };
-  }, [curve.data, curve.timeDetail]);
+  }, [currentCurve.data, currentCurve.timeDetail]);
   return (
     <>
       <CurveFormCompoent getCurve={getCurve} />
+      <p style={{ marginBottom: 5 }}>
+        <em>选择不同的时间，重新绘制折线图</em>
+      </p>
+      <Select
+        value={currentCurve.id}
+        onChange={value => {
+          const findCurve = curve.find(v => v.id === value);
+          setCurrentCurve(findCurve || {});
+        }}
+        placeholder='暂无可选时间'
+        style={{ marginBottom: 25, minWidth: 250 }}
+      >
+        {curve.map(v => {
+          return (
+            <Option key={v.id} value={v.id}>
+              {v.timeDetail}
+            </Option>
+          );
+        })}
+      </Select>
       <div id='detailCurve' style={{ height: 500 }}></div>
     </>
   );
@@ -342,7 +365,7 @@ const Details = props => {
           const callArr = [getBaseInfo, getWorkCondition];
           let { cmdId } = locationState;
           if (activeKey == 2) {
-            getCurve({ cmdId, skip: 1, type: 0 });
+            getCurve({ cmdId, type: 0 });
           } else if (activeKey == 3) {
             getBreakdownList({ cmdId, pageNum: 1, pageSize: 10 });
           } else {

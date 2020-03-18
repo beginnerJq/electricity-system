@@ -7,7 +7,8 @@ const workCondition = params => {
   return axios.post('/equipment/workCondition', params);
 };
 const curve = params => {
-  return axios.post('/equipment/curve', params);
+  //return axios.post('/equipment/curve', params);
+  return axios.post('/equipment/curve/list', params);
 };
 const breakdownList = params => axios.post('/equipment/breakdown/list', params);
 const breakdownCheck = params =>
