@@ -6,8 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --hot",
     "build": "webpack --mode production",
-    "eslint:fix": "eslint --fix --ext .tsx --ext .ts src/",
-    "i18n": "babel src"
+    "eslint:fix": "eslint --fix --ext .tsx --ext .ts src/"
   },
   "keywords": [
     "electricity"

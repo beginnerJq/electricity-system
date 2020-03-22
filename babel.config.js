@@ -38,16 +38,6 @@ module.exports = {
       },
       'antd',
     ],
-    [
-      'import',
-      {
-        libraryName: 'ant-design-pro',
-        libraryDirectory: 'lib',
-        style: true,
-        camel2DashComponentName: false,
-      },
-      'ant-design-pro',
-    ],
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     ['@babel/plugin-proposal-optional-chaining', { loose: true }],
