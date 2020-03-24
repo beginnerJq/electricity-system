@@ -9,7 +9,7 @@ const AddEquipRoute = [
     exact: true,
     component: lazy(() => import('./AddEquip')),
     name: '添加设备',
-    authorized: [0, 1],
+    authorized: [0, 1, 2],
     icon: 'plus-circle',
   },
 ];
