@@ -80,7 +80,7 @@
     "ant-design-pro": "^2.3.2",
     "antd": "^3.26.12",
     "autoprefixer": "^9.7.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-plugin-react-css-modules": "^5.2.6",
     "core-js": "^3.6.4",
     "echarts": "^4.6.0",
